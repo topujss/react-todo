@@ -6,7 +6,12 @@ export default function App() {
     <>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route
+            path="/"
+            element={
+              <Home title="I am a home page" subtitle="Here i am gonna make form by using class component" />
+            }
+          />
         </Routes>
       </BrowserRouter>
     </>
