@@ -1,4 +1,5 @@
 import { Component } from 'react';
+import Counter from '../../components/Counter';
 import Form from '../../components/Form/Form';
 
 export default class Home extends Component {
@@ -15,6 +16,7 @@ export default class Home extends Component {
         <p className="text-center text-lg">{subtitle}</p>
 
         <section className="max-w-screen-sm mx-auto">
+          <Counter />
           <Form />
         </section>
       </>

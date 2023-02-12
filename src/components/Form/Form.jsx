@@ -32,7 +32,7 @@ class Form extends Component {
         <form action="">
           <div className="shadow shadow-sky-200 rounded p-5 mt-5">
             <div className="my-5">
-              <label htmlFor="name" className="leading-7 font-semibold text-gray-600">
+              <label htmlFor="name" className="block leading-7 font-semibold text-gray-600">
                 Name
               </label>
               <input
