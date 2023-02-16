@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { Component } from 'react';
-import { FcEmptyTrash } from 'react-icons/fc';
+import { FcFullTrash } from 'react-icons/fc';
 import { SiPinboard } from 'react-icons/si';
 
 class Todo extends Component {
@@ -22,7 +22,7 @@ class Todo extends Component {
       .then((res) => {
         this.setState((prevState) => ({
           ...prevState,
-          todo: [...prevState.input, ...res.data],
+          todo: [...res.data],
         }));
       })
       .catch((err) => console.error(err.message));
@@ -46,8 +46,23 @@ class Todo extends Component {
     const { input } = this.state;
 
     // sending data to server using axios post method
-    axios.post('http://localhost:5050/todo', input);
+    axios
+      .post('http://localhost:5050/todo', input)
+      .then((res) => {
+        this.setState((prevState) => ({
+          ...prevState,
+          // todo: [...prevState.todo, input],
+          input: {
+            title: '',
+            status: 'started',
+          },
+        }));
+        this.componentDidMount();
+      })
+      .catch((err) => console.error(err.message));
   };
+
+  handleDelete = (id) => ({});
 
   render() {
     // get time from date
@@ -102,7 +117,8 @@ class Todo extends Component {
               </h2>
               <div className="task-list">
                 <ul className="bg-white rounded-lg border border-gray-200 text-gray-900">
-                  {todo.map(({ title, status }, index) => {
+                  {/* Map start from here */}
+                  {todo.map(({ title, status, id }, index) => {
                     let textColor = 'bg-green-500';
                     let bgColor = 'bg-red-500';
                     let strike = 'line-through';
@@ -134,20 +150,22 @@ class Todo extends Component {
                     return (
                       <li
                         key={index}
-                        className={`px-6 py-2 w-full rounded-lg flex justify-between items-center ${textColor} ${strike}`}
+                        className={`px-6 py-2 w-full rounded-lg flex justify-between items-center ${textColor} ${
+                          strike ? 'completed' : strike
+                        } `}
                       >
                         <div className="inner-left">
                           <SiPinboard className="inline-block mr-2" />
-                          <span className="text-xl">{title}</span>
+                          <span className="uppercase text-3xl align-middle">{title}</span>
                         </div>
                         <div className="inner-right flex gap-2">
                           <span
-                            className={`text-xs inline-block py-1 px-2.5 leading-none text-center whitespace-nowrap font-bold ${bgColor} rounded-full ${textColor}`}
+                            className={`text-xs inline-block py-1 px-2.5 leading-none text-center whitespace-nowrap font-bold ${bgColor} rounded-full ${textColor} capitalize`}
                           >
                             {status}
                           </span>
-                          <button>
-                            <FcEmptyTrash />
+                          <button onClick={this.handleDelete(id)}>
+                            <FcFullTrash />
                           </button>
                         </div>
                       </li>
