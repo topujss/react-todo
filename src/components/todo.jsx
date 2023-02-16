@@ -3,6 +3,8 @@ import { Component } from 'react';
 import { FcFullTrash } from 'react-icons/fc';
 import { SiPinboard } from 'react-icons/si';
 
+// whenever send value always use callback function (() => parents) in it's parents component
+
 class Todo extends Component {
   constructor(props) {
     super(props);
@@ -17,15 +19,19 @@ class Todo extends Component {
   }
 
   componentDidMount() {
-    axios
-      .get('http://localhost:5050/todo/?_sort=status&_order=desc')
-      .then((res) => {
-        this.setState((prevState) => ({
-          ...prevState,
-          todo: [...res.data],
-        }));
-      })
-      .catch((err) => console.error(err.message));
+    try {
+      axios
+        .get('http://localhost:5050/todo/?_sort=status&_order=desc')
+        .then((res) => {
+          this.setState((prevState) => ({
+            ...prevState,
+            todo: [...res.data],
+          }));
+        })
+        .catch((err) => console.error(err.message));
+    } catch (error) {
+      console.error(error.message);
+    }
   }
 
   handleChange = (e) => {
@@ -45,24 +51,36 @@ class Todo extends Component {
 
     const { input } = this.state;
 
-    // sending data to server using axios post method
-    axios
-      .post('http://localhost:5050/todo', input)
-      .then((res) => {
-        this.setState((prevState) => ({
-          ...prevState,
-          // todo: [...prevState.todo, input],
-          input: {
-            title: '',
-            status: 'started',
-          },
-        }));
-        this.componentDidMount();
-      })
-      .catch((err) => console.error(err.message));
+    try {
+      // sending data to server using axios post method
+      axios
+        .post('http://localhost:5050/todo', input)
+        .then((res) => {
+          this.setState((prevState) => ({
+            ...prevState,
+            todo: [...prevState.todo, input],
+            input: {
+              title: '',
+              status: 'started',
+            },
+          }));
+          this.componentDidMount();
+        })
+        .catch((err) => console.error(err.message));
+    } catch (error) {
+      console.error(error.message);
+    }
   };
 
-  handleDelete = (id) => ({});
+  handleDelete = (id) => {
+    try {
+      axios.delete(`http://localhost:5050/todo/${id}`).then((res) => {
+        this.componentDidMount();
+      });
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
 
   render() {
     // get time from date
@@ -150,13 +168,11 @@ class Todo extends Component {
                     return (
                       <li
                         key={index}
-                        className={`px-6 py-2 w-full rounded-lg flex justify-between items-center ${textColor} ${
-                          strike ? 'completed' : strike
-                        } `}
+                        className={`px-6 py-2 w-full rounded-lg flex justify-between items-center ${textColor} ${strike} `}
                       >
                         <div className="inner-left">
                           <SiPinboard className="inline-block mr-2" />
-                          <span className="uppercase text-3xl align-middle">{title}</span>
+                          <span className="text-xl align-middle">{title}</span>
                         </div>
                         <div className="inner-right flex gap-2">
                           <span
@@ -164,7 +180,7 @@ class Todo extends Component {
                           >
                             {status}
                           </span>
-                          <button onClick={this.handleDelete(id)}>
+                          <button onClick={() => this.handleDelete(id)}>
                             <FcFullTrash />
                           </button>
                         </div>
