@@ -1,5 +1,4 @@
 import { Component } from 'react';
-import Todo from '../../components/Todo';
 
 export default class Home extends Component {
   constructor(props) {
@@ -15,7 +14,7 @@ export default class Home extends Component {
         <p className="text-center text-lg">{subtitle}</p>
 
         <section className="max-w-screen-sm mx-auto">
-          <Todo />
+          <h1 className="text-center text-2xl text-red-500"> Im at home</h1>
         </section>
       </>
     );
